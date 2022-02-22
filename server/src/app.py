@@ -21,18 +21,6 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, SelectField, RadioField, HiddenField, StringField, IntegerField, FloatField
 from wtforms.validators import InputRequired, Length, Regexp, NumberRange
 
-topbar = Navbar(
-    View('News', 'get_news'),
-    View('Live', 'get_live'),
-    View('Programme', 'get_programme'),
-    View('Classement', 'get_classement'),
-    View('Contact', 'get_contact'),
-    )
-
-# registers the "top" menubar
-nav = Nav()
-nav.register_element('top', topbar)
-
 app = Flask(__name__)
 Bootstrap(app)
 
@@ -146,7 +134,6 @@ def add_record():
     new_doc_ref = request.args.get('new_doc_ref')
     
     if request.method == 'POST':
-        # if request.form['submit'] == 'add':
         if form.validate_on_submit():
             print(request.form['record_type'])
             if request.form['record_type'] == 'update':
@@ -184,81 +171,14 @@ def add_record():
                     new_doc = company_funding_ref.add(record)
                     print(new_doc[1].id)
                     new_doc_ref = new_doc[1].id
-                    # print('Successfully added a record with ID {new_doc_ref[1].id}!')
                     return redirect(url_for('add_record', new_doc_ref=new_doc[1].id))
                 except Exception as e:
                     return f"An Error Occured: {e}"
         return redirect(url_for('add_record'), new_doc_ref=new_doc_ref)
-        # elif request.form['submit'] == 'delete':
-        #     print('deleting')
     return render_template('add_record.html', form = form, variable=new_doc_ref)
-    # return render_template('add_record.html')
-    # try:
-    #     record = {
-    #         u'company' : u'test_company', 
-    #         u'numEmps' : 10, 
-    #         u'category' : u'web', 
-    #         u'city' : u'San Francisco', 
-    #         u'state' : u'CA', 
-    #         u'fundedDate' : u'01-Oct-07',
-    #         u'raisedAmt' : 10000, 
-    #         u'currency' : u'USD', 
-    #         u'round' : u'a'
-    #     }
-    #     company_funding_ref.add(record)
-    #     return jsonify({"success": True}), 200
-    # except Exception as e:
-    #     return f"An Error Occured: {e}"
-
-    # return '''
-    #           <form method="POST">
-    #               <div><label>Language: <input type="text" name="language"></label></div>
-    #               <div><label>Framework: <input type="text" name="framework"></label></div>
-    #               <input type="submit" value="Submit">
-    #           </form>'''
-
-    # form1 = AddRecord()
-    # if form1.validate_on_submit():
-    #     name = request.form['name']
-    #     numEmps = request.form['numEmps']
-    #     category = request.form['category']
-    #     city = request.form['city']
-    #     state = request.form['state']
-    #     fundedDate = request.form['fundedDate']
-    #     raisedAmt = request.form['raisedAmt']
-    #     currency = request.form['currency']
-    #     round = request.form['round']
-    #     # the data to be inserted into Sock model - the table, socks
-    #     record = Record(name, numEmps, category, city, state, fundedDate, raisedAmt, currency, round)
-    #     # adds record to database
-    #     company_funding_ref.add(record.to_dict())
-    #     # create a message to send to the template
-    #     message = f"The data for sock {name} has been submitted."
-    #     return render_template('add_record.html', message=message)
-    # else:
-    #     # show validaton errors
-    #     # see https://pythonprogramming.net/flash-flask-tutorial/
-    #     for field, errors in form1.errors.items():
-    #         for error in errors:
-    #             flash("Error in {}: {}".format(
-    #                 getattr(form1, field).label.text,
-    #                 error
-    #             ), 'error')
-    #     return render_template('add_record.html', form1=form1)
-        
-        # id = request.json['id']
-        # company_funding_ref.document(id).set(request.json)
-        # return jsonify({"success": True}), 200
-    # except Exception as e:
-    #     print("An Error Occured: {e}")
 
 @app.route('/list', methods=['GET'])
 def read():
-    """
-        read() : Fetches documents from Firestore collection as JSON
-        todo : Return document that matches query ID
-        all_todos : Return all documents
-    """
     try:
         # Check if ID was passed to URL query
         doc_id = request.args.get('id') 
@@ -270,20 +190,6 @@ def read():
             return jsonify(all_docs), 200
     except Exception as e:
         return f"An Error Occured: {e}"
-
-@app.route('/update', methods=['POST', 'PUT'])
-def update():
-    """
-        update() : Update document in Firestore collection with request body
-        Ensure you pass a custom ID as part of json body in post request
-        e.g. json={'id': '1', 'title': 'Write a blog post today'}
-    """
-    try:
-        id = request.json['id']
-        company_funding_ref.document(id).update(request.json)
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        print("An Error Occured: {e}")
 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete():
@@ -301,164 +207,6 @@ def delete():
         except Exception as e:
             return f"An Error Occured: {e}"
     return render_template('delete_record.html', form = form1)
-    # try:
-    #     # Check for ID in URL query
-    #     company_id = request.args.get('id')
-    #     company_funding_ref.document(company_id).delete()
-    #     return jsonify({"success": True}), 200
-    # except Exception as e:
-    #     print("An Error Occured: {e}")
-
-external_stylesheets = [
-        {
-            "href": "https://fonts.googleapis.com/css2?"
-            "family=Lato:wght@400;700&display=swap",
-            "rel": "stylesheet",
-        },
-    ]
-dash_app = dash.Dash(
-    server=app,
-    routes_pathname_prefix='/dashapp/', 
-    external_stylesheets=external_stylesheets
-)
-dash_app.layout = html.Div(
-        children=[
-            html.Nav(
-                className = "navbar navbar-expand-lg navbar-light bg-light",
-                children=[
-                    html.A('Home', className="nav-item nav-link", href='/'),
-                    html.A('Analyzer', className="nav-item nav-link", href='/dashapp/'),
-                    html.A('Add/Update a record', className="nav-item nav-link", href='/add'),
-                    html.A('Delete a record', className="nav-item nav-link", href='/delete')
-                    ],
-                    ),
-            html.Div(
-                children=[
-                    html.H1(children="Funding Analyzer", className="header-title"),
-                    html.H1(children="CFMT", className="header-title"),
-                    html.P(
-                        children="Analyzer tool"
-                        " for company funding"
-                        " in the US.",
-                        className="header-description",
-                    ),
-                ],
-                className="header",
-            ),
-            html.Div(
-                children=[
-                    html.Div(
-                        children=[
-                            html.Div(children="State", className="menu-title"),
-                            dcc.Dropdown(
-                                id="state-filter",
-                                options=[
-                                    {"label": state, "value": state}
-                                    for state in np.sort(data.state.unique())
-                                ],
-                                value="CA",
-                                clearable=True,
-                                className="dropdown",
-                            ),
-                        ]
-                    ),
-                    html.Div(
-                        children=[
-                            html.Div(children="Category", className="menu-title"),
-                            dcc.Dropdown(
-                                id="category-filter",
-                                options=[
-                                    {"label": category, "value": category}
-                                    for category in data.category.unique() if not pd.isnull(category)
-                                ],
-                                value="web",
-                                clearable=True,
-                                className="dropdown",
-                            ),
-                        ]
-                    ),
-                    html.Div(
-                        children=[
-                            html.Div(
-                                children="Date Range", className="menu-title"
-                            ),
-                            dcc.DatePickerRange(
-                                id="date-range",
-                                min_date_allowed=data.fundedDate.min().date(),
-                                max_date_allowed=data.fundedDate.max().date(),
-                                start_date=data.fundedDate.min().date(),
-                                end_date=data.fundedDate.max().date(),
-                            ),
-                        ]
-                    ),
-                ],
-                className="menu",
-            ),
-            html.Div(
-                children=[
-                    html.Div(
-                        children=dcc.Graph(
-                            id="funding-chart",
-                            config={"displayModeBar": False},
-                        ),
-                        className="card",
-                    ),
-                    html.Div(
-                        children=dcc.Graph(
-                            id="category-chart"
-                        ),
-                    ),
-                ],
-                className="wrapper",
-            ),
-        ]
-    )
-
-
-@dash_app.callback(
-    [Output("funding-chart", "figure"), Output("category-chart", "figure")],
-    [
-        Input("state-filter", "value"),
-        Input("category-filter", "value"),
-        Input("date-range", "start_date"),
-        Input("date-range", "end_date"),
-    ],
-)
-def update_charts(state, category, start_date, end_date):
-    category_filter = True  #get all categories if category is empty
-    if category:
-        category_filter = (data.category == category)
-    mask = (
-        (data.state == state)
-        & (data.category == category_filter)
-        & (data.fundedDate >= start_date)
-        & (data.fundedDate <= end_date)
-    )
-    filtered_data = data.loc[mask, :]
-    # pie_filtered = data.loc[data['category']==category]
-    funding_chart_figure = {
-        "data": [
-            {
-                "x": filtered_data["fundedDate"],
-                "y": filtered_data["raisedAmt"],
-                "type": "lines",
-                "hovertemplate": "$%{y:.2f}<extra></extra>",
-            },
-        ],
-        "layout": {
-            "title": {
-                "text": "Raised fundings by date",
-                "x": 0.05,
-                "xanchor": "left",
-            },
-            "xaxis": {"fixedrange": True},
-            "yaxis": {"tickprefix": "$", "fixedrange": True},
-            "colorway": ["#17B897"],
-        },
-    }
-
-    category_chart_figure = px.pie(data_frame=filtered_data, values='raisedAmt', names='category', title='Raised funding by category')
-    return funding_chart_figure, category_chart_figure
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
