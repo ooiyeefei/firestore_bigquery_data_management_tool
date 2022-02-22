@@ -1,0 +1,11 @@
+flask
+firebase_admin
+dash==1.13.3
+pandas==1.0.5
+flask_wtf
+WTForms==2.2.1
+Flask-WTF==0.14.3
+flask_bootstrap
+flask_nav
+plotly.express
+gunicorn
