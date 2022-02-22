@@ -10,4 +10,4 @@ sample project for company funding management tool
 - `python3 app.py`
 
 ## Reference architecture
-<img src="https://raw.githubusercontent.com/ooiyeefei/cfmt_host/main/cfmt_archi.jpeg?sanitize=true&raw=true" />
+<img src="https://github.com/ooiyeefei/cfmt_host/blob/main/cfmt_archi.jpeg?raw=true" />
