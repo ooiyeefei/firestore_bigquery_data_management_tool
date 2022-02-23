@@ -128,6 +128,18 @@ def index():
 def download():
     return render_template('download.html')
 
+@app.route("/delete_success")
+def delete_success():
+    return render_template('delete_success.html')
+
+@app.route("/add_success/<doc_id>")
+def add_success(doc_id):
+    return render_template('add_success.html', variable=doc_id)
+
+@app.route("/delete_error")
+def delete_error():
+    return render_template('delete_error.html')
+
 @app.route("/add/", methods=["GET", "POST", 'PUT'])
 def add_record():
     form = AddRecord()
@@ -171,11 +183,11 @@ def add_record():
                     new_doc = company_funding_ref.add(record)
                     print(new_doc[1].id)
                     new_doc_ref = new_doc[1].id
-                    return redirect(url_for('add_record', new_doc_ref=new_doc[1].id))
+                    return redirect(url_for('add_success', doc_id=new_doc[1].id))
                 except Exception as e:
                     return f"An Error Occured: {e}"
         return redirect(url_for('add_record'), new_doc_ref=new_doc_ref)
-    return render_template('add_record.html', form = form, variable=new_doc_ref)
+    return render_template('add_record.html', form = form)
 
 @app.route('/list', methods=['GET'])
 def read():
@@ -203,9 +215,9 @@ def delete():
             print(id)
             company_funding_ref.document(id).delete()
             flash('The record has been successfully deleted.')
-            return redirect(url_for('delete'))
+            return redirect(url_for('delete_success'))
         except Exception as e:
-            return f"An Error Occured: {e}"
+            return redirect(url_for('delete_error'))
     return render_template('delete_record.html', form = form1)
 
 if __name__ == "__main__":

@@ -13,13 +13,12 @@
       {% include 'navbar.html' %}
       <div class="container my-5">
         <main class="bd-content" role="main">
-          <h1 class="bd-title" id="content">Welcome to the Funding Analyzer Tool!</h1>
-          <H5>A place for you to analyze the current company funding trends or <a href="/add">contribute to the records</a>!</H5>
+          <h1 class="bd-title" id="content">Your data has been successfully submitted.</h1>
+          <p>Record ID submitted: {{ variable }}</p>
+          <p><a href="/add">Submit</a> a new record or <a href="/delete">delete</a> another record</p>
+          <p class="bd-lead">Check out the <a href="/">analysis tool</a> or <a href="/download">search and download</a> from our database</p>
         </main>
-    </div>
-    <iframe width="100%" height="1800" src="https://datastudio.google.com/embed/reporting/dccd6eff-f01b-4b52-94bc-88ac8d2f3d78/page/8YMmC" frameborder="0" style="border:0" allowfullscreen></iframe>
-    <!-- Optional JavaScript; choose one of the two! -->
-
+    </div>      
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
