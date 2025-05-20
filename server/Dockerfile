@@ -1,5 +1,5 @@
 # 1 
-FROM python:3.7
+FROM python:3.13.3
 
 # 2
 COPY src/ /app
